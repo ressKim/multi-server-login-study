@@ -3,8 +3,11 @@ package com.study.multiserverlogin.user;
 import com.study.multiserverlogin.Message;
 import com.study.multiserverlogin.domain.user.UserEntity;
 import com.study.multiserverlogin.domain.user.UserEntityRepository;
+import com.study.multiserverlogin.response.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,16 +33,23 @@ public class UserController {
      * @param userValue user 회원가입 - 지금은 중복된 userId 상관없이 가입
      */
     @PostMapping("/join")
-    public Message saveUser(@RequestBody @Validated UserValue userValue, BindingResult bindingResult, HttpServletResponse response) {
+    public ResponseEntity<BasicResponse> saveUser(@RequestBody @Validated UserValue userValue, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return new Message("아이디 또는 비밀번호를 확인해 주세요");
+            return ResponseEntity
+                    .badRequest()
+                    .body(
+                            BasicResponse.createResponse("아이디 또는 비밀번호를 확인해 주세요", userValue)
+                    );
         }
 
         userService.userSave(userValue);
 
-        return new Message("success");
+        return ResponseEntity
+                .ok()
+                .body(
+                        BasicResponse.createResponse("회원가입 성공", userValue)
+                );
     }
 
 }
