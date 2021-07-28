@@ -37,7 +37,7 @@ public class UserController {
             return new Message("아이디 또는 비밀번호를 확인해 주세요");
         }
 
-        UserEntity newUser = new UserEntity(userDto.getUserId(), userDto.getPassword());
+        UserEntity newUser = UserEntity.createUser(userDto);
         userEntityRepository.save(newUser);
 
         return new Message("success");

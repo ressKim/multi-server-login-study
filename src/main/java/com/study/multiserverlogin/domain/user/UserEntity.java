@@ -1,9 +1,9 @@
 package com.study.multiserverlogin.domain.user;
 
+import com.study.multiserverlogin.user.UserDto;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,9 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
-//현재 외부에서 사용할 일이 없으니깐 기본 생성자는 protected
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
+@Value()
 public class UserEntity {
     /**
      * @id - user table pk
@@ -23,16 +21,17 @@ public class UserEntity {
      */
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    private String userId;
+    String userId;
 
-    private String password;
+    String password;
 
-
-    public UserEntity(String userId, String password) {
-        this.userId = userId;
-        this.password = password;
+    public static UserEntity createUser(UserDto userDto) {
+        return new UserEntity(null, userDto.getUserId(), userDto.getPassword());
     }
 
+//    public UserEntity() {
+//
+//    }
 }
