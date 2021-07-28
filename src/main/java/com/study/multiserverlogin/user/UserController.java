@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @Slf4j
 public class UserController {
 
-    private final UserEntityRepository userEntityRepository;
+    private final UserService userService;
 
 //    @GetMapping("")
 //    public UserDto getUser(@RequestParam UserDto userDto){
@@ -27,18 +27,17 @@ public class UserController {
 //    }
 
     /**
-     * @param userDto user 회원가입 - 지금은 중복된 userId 상관없이 가입
+     * @param userValue user 회원가입 - 지금은 중복된 userId 상관없이 가입
      */
     @PostMapping("/join")
-    public Message saveUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult, HttpServletResponse response) {
+    public Message saveUser(@RequestBody @Validated UserValue userValue, BindingResult bindingResult, HttpServletResponse response) {
 
         if (bindingResult.hasErrors()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return new Message("아이디 또는 비밀번호를 확인해 주세요");
         }
 
-        UserEntity newUser = UserEntity.createUser(userDto);
-        userEntityRepository.save(newUser);
+        userService.userSave(userValue);
 
         return new Message("success");
     }

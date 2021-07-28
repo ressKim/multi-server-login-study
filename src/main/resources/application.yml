@@ -1,7 +1,7 @@
 ## 현재 h2db로 테스트 중이며 MySQL 로 바꿀 계획입니다.
 spring:
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ## 임시 테스트라 create 로 만드는 중입니다.
       ddl-auto: create

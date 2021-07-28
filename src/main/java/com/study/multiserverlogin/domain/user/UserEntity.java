@@ -1,9 +1,8 @@
 package com.study.multiserverlogin.domain.user;
 
-import com.study.multiserverlogin.user.UserDto;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.study.multiserverlogin.user.UserValue;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,11 +26,12 @@ public class UserEntity {
 
     String password;
 
-    public static UserEntity createUser(UserDto userDto) {
-        return new UserEntity(null, userDto.getUserId(), userDto.getPassword());
+
+    public static UserEntity createUser(UserValue userValue) {
+        return new UserEntity(null, userValue.getUserId(), userValue.getPassword());
     }
 
-//    public UserEntity() {
+    //    public UserEntity() {
 //
 //    }
 }
