@@ -12,7 +12,6 @@ public class UserService {
     private final UserEntityRepository userEntityRepository;
 
     public void userSave(UserValue userValue) {
-        UserEntity newUser = UserEntity.createUser(userValue);
-        userEntityRepository.save(newUser);
+        userEntityRepository.save(UserEntity.create(userValue));
     }
 }

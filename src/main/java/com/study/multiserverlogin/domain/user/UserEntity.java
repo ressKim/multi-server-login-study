@@ -26,12 +26,8 @@ public class UserEntity {
 
     String password;
 
-
-    public static UserEntity createUser(UserValue userValue) {
+    public static UserEntity create(UserValue userValue) {
         return new UserEntity(null, userValue.getUserId(), userValue.getPassword());
     }
 
-    //    public UserEntity() {
-//
-//    }
 }
