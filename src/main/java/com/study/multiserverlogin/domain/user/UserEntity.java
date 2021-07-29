@@ -30,4 +30,9 @@ public class UserEntity {
         return new UserEntity(null, userValue.getUserId(), userValue.getPassword());
     }
 
+    private UserEntity(Long id, String userId, String password) {
+        this.id = id;
+        this.userId = userId;
+        this.password = password;
+    }
 }
