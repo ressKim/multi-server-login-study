@@ -4,6 +4,7 @@
 |Method|URI|Description|
 |------|---|---|
 |POST|/user/join|회원가입|
+|POST|/user/login|로그인|
 
 # 상세
 
@@ -12,6 +13,14 @@
 - /user/join 
  POST/JSON  >>
 
+  {
+
+  "userId" : "test-user",
+
+  "password" : "1234!"
+
+  }
+- /user/login
   {
 
   "userId" : "test-user",

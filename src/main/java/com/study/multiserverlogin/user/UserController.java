@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -50,6 +51,11 @@ public class UserController {
                 .body(
                         BasicResponse.createResponse("회원가입 성공", userValue)
                 );
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<BasicResponse> login(@RequestBody UserValue userValue, HttpSession session) {
+        return userService.login(userValue, session);
     }
 
 }

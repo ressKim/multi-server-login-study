@@ -1,6 +1,9 @@
 package com.study.multiserverlogin.domain.session;
 
 import com.study.multiserverlogin.user.LoginValue;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import javax.persistence.Entity;
@@ -9,20 +12,22 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-@Value()
+//@Value()
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class LoginSession {
 
     @Id
     @GeneratedValue
-    Long id;
-    Long userId;
+    private Long id;
+    private Long userId;
 
-    String sessionKey;
+    private String sessionKey;
 
-    LocalDateTime sessionTime;
+    private LocalDateTime sessionTime;
 
-    public static LoginSession create(LoginValue loginValue, Long userId) {
-        return new LoginSession(null, userId, loginValue.getSessionKey(), LocalDateTime.now());
+    public static LoginSession create(String sessionKey, Long userId) {
+        return new LoginSession(null, userId, sessionKey, LocalDateTime.now());
     }
 
     private LoginSession(Long id, Long userId, String sessionKey, LocalDateTime sessionTime) {

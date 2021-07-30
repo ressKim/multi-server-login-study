@@ -1,7 +1,7 @@
 package com.study.multiserverlogin.domain.user;
 
 import com.study.multiserverlogin.user.UserValue;
-import lombok.Value;
+import lombok.*;
 import lombok.experimental.NonFinal;
 
 import javax.persistence.Entity;
@@ -11,7 +11,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
-@Value()
+//@Value()
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
     /**
      * @id - user table pk
@@ -20,11 +22,11 @@ public class UserEntity {
      */
     @Id
     @GeneratedValue
-    Long id;
+    private Long id;
 
-    String userId;
+    private String userId;
 
-    String password;
+    private String password;
 
     public static UserEntity create(UserValue userValue) {
         return new UserEntity(null, userValue.getUserId(), userValue.getPassword());
