@@ -1,8 +1,6 @@
-package com.study.multiserverlogin.user;
+package com.study.multiserverlogin.login;
 
 import lombok.Value;
-
-import java.time.LocalDateTime;
 
 @Value
 public class LoginValue {

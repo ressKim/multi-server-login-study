@@ -1,10 +1,8 @@
 package com.study.multiserverlogin.domain.session;
 
-import com.study.multiserverlogin.user.LoginValue;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,5 +33,9 @@ public class LoginSession {
         this.userId = userId;
         this.sessionKey = sessionKey;
         this.sessionTime = sessionTime;
+    }
+
+    public void updateSessionTime(){
+        sessionTime = LocalDateTime.now();
     }
 }

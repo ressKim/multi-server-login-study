@@ -1,20 +1,15 @@
 package com.study.multiserverlogin.user;
 
-import com.study.multiserverlogin.Message;
-import com.study.multiserverlogin.domain.user.UserEntity;
-import com.study.multiserverlogin.domain.user.UserEntityRepository;
+import com.study.multiserverlogin.login.LoginService;
 import com.study.multiserverlogin.response.BasicResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -23,12 +18,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-
-//    @GetMapping("")
-//    public UserDto getUser(@RequestParam UserDto userDto){
-//
-//        return null;
-//    }
+    private final LoginService loginService;
 
     /**
      * @param userValue user 회원가입 - 지금은 중복된 userId 상관없이 가입
@@ -55,7 +45,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<BasicResponse> login(@RequestBody UserValue userValue, HttpSession session) {
-        return userService.login(userValue, session);
+        return loginService.login(userValue, session);
     }
 
 }
