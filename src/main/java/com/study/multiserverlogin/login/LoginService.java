@@ -46,6 +46,8 @@ public class LoginService {
 
         String sessionKey = createSession(userValue.getUserId());
         session.setAttribute(String.valueOf(LOGIN_SESSION), sessionKey);
+        //현재 login session 만 따로 5분으로 설정
+        session.setMaxInactiveInterval(5*60);
 
         return ResponseEntity
                 .ok()
@@ -70,7 +72,7 @@ public class LoginService {
         LoginSession loginSession = loginSessionRepository.findBySessionKey(sessionValue);
         Duration duration = Duration.between(loginSession.getSessionTime(), LocalDateTime.now());
         //5분이상 차이나면 세션 만료 보내기
-        if (duration.getSeconds() > 60 * 60 * 5) {
+        if (duration.getSeconds() > 60 * 5) {
             loginSessionRepository.deleteById(loginSession.getId());
             return ResponseEntity
                     .ok()
