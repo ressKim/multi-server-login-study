@@ -47,7 +47,7 @@ public class LoginService {
         String sessionKey = createSession(userValue.getUserId());
         session.setAttribute(String.valueOf(LOGIN_SESSION), sessionKey);
         //현재 login session 만 따로 5분으로 설정
-        session.setMaxInactiveInterval(5*60);
+        session.setMaxInactiveInterval(5 * 60);
 
         return ResponseEntity
                 .ok()
@@ -57,16 +57,14 @@ public class LoginService {
                 ));
     }
 
-    public ResponseEntity<BasicResponse> loginCheck(HttpSession session) {
+    public BasicResponse loginCheck(HttpSession session) {
         String sessionValue = (String) session.getAttribute(String.valueOf(LOGIN_SESSION));
         if (sessionValue == null) {
-            return ResponseEntity
-                    .ok()
-                    .body(
-                            BasicResponse.createResponse(
-                                    "로그인 되지 않은 사용자 입니다.",
-                                    null
-                            ));
+            return
+                    BasicResponse.createResponse(
+                            "로그인 되지 않은 사용자 입니다.",
+                            null
+                    );
         }
 
         LoginSession loginSession = loginSessionRepository.findBySessionKey(sessionValue);
@@ -74,26 +72,22 @@ public class LoginService {
         //5분이상 차이나면 세션 만료 보내기
         if (duration.getSeconds() > 60 * 5) {
             loginSessionRepository.deleteById(loginSession.getId());
-            return ResponseEntity
-                    .ok()
-                    .body(
-                            BasicResponse.createResponse(
-                                    "세션이 만료되었습니다 다시 로그인해주세요",
-                                    null
-                            ));
+            return
+                    BasicResponse.createResponse(
+                            "세션이 만료되었습니다 다시 로그인해주세요",
+                            null
+                    );
         }
         Long loginUserId = loginSession.getUserId();
 
         //세션 시간 현재로 갱신
         loginSession.updateSessionTime();
 
-        return ResponseEntity
-                .ok()
-                .body(
-                        BasicResponse.createResponse(
-                                "로그인중인 사용자",
-                                loginUserId
-                        ));
+        return
+                BasicResponse.createResponse(
+                        "로그인중인 사용자",
+                        loginUserId
+                );
     }
 
     private String createSession(String userId) {

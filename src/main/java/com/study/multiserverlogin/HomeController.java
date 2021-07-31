@@ -14,14 +14,14 @@ import javax.servlet.http.HttpSession;
 public class HomeController {
 
     private final LoginService loginService;
-
-    /**
+    /*
+*
      * 현재 프로젝트에서 로그인/비로그인 구분 하는 곳
-     *
      */
     @GetMapping("/")
-    public ResponseEntity<BasicResponse> homeTest(HttpSession session){
-        return loginService.loginCheck(session);
+    public ResponseEntity<? extends BasicResponse> homeTest(HttpSession session) {
+        return ResponseEntity
+                .ok(loginService.loginCheck(session));
     }
 
 }
