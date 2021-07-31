@@ -9,14 +9,16 @@ import javax.validation.constraints.NotBlank;
 
 //@Value(staticConstructor = "create")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class UserValue {
 
-    @NotBlank
-    String userId;
-    @NotBlank
-    String password;
+    private String userId;
+    private String password;
 
+
+    //UserValue 검증
+    //현재 null 만 검증
+    public static boolean validCheck(UserValue userValue){
+        return userValue.getUserId() == null || userValue.getPassword() == null;
+    }
 }

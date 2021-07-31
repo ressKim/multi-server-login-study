@@ -24,9 +24,9 @@ public class UserController {
      * @param userValue user 회원가입 - 지금은 중복된 userId 상관없이 가입
      */
     @PostMapping("/join")
-    public ResponseEntity<BasicResponse> saveUser(@RequestBody @Validated UserValue userValue, BindingResult bindingResult) {
+    public ResponseEntity<BasicResponse> saveUser(@RequestBody UserValue userValue) {
 
-        if (bindingResult.hasErrors()) {
+        if (UserValue.validCheck(userValue)) {
             return ResponseEntity
                     .badRequest()
                     .body(
