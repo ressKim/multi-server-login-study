@@ -34,13 +34,7 @@ public class UserController {
                     );
         }
 
-        userService.userSave(userValue);
-
-        return ResponseEntity
-                .ok()
-                .body(
-                        BasicResponse.createResponse("회원가입 성공", userValue)
-                );
+        return userService.userSave(userValue);
     }
 
     @PostMapping("/login")

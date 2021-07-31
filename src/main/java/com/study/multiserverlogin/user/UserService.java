@@ -21,11 +21,22 @@ public class UserService {
     private final UserEntityRepository userEntityRepository;
     private final LoginSessionRepository loginSessionRepository;
 
-    public void userSave(UserValue userValue) {
+    public ResponseEntity<BasicResponse> userSave(UserValue userValue) {
+        //아이디 중복이면 badRequest return
+        if (userEntityRepository.existsByUserId(userValue.getUserId())) {
+            return
+                    ResponseEntity
+                            .badRequest()
+                            .body(
+                                    BasicResponse.createResponse(
+                                            "중복된 아이디입니다.",
+                                            userValue
+                                    ));
+        }
         userEntityRepository.save(UserEntity.create(userValue));
+        //성공시 성공 return
+        return ResponseEntity.ok(BasicResponse.createResponse("회원가입 성공", userValue));
     }
-
-
 
 
 }
