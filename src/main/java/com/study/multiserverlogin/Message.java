@@ -1,7 +1,8 @@
 package com.study.multiserverlogin;
 
 /**
- * response 되는 임시 message
+ * 현재 사용되지 않는 message
+ * BasicResponse 로 대체
  */
 public class Message {
 
