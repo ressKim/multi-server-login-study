@@ -28,14 +28,14 @@ public class UserService {
                     ResponseEntity
                             .badRequest()
                             .body(
-                                    BasicResponse.createResponse(
+                                    BasicResponse.create(
                                             "중복된 아이디입니다.",
                                             userValue
                                     ));
         }
         userEntityRepository.save(UserEntity.create(userValue));
         //성공시 성공 return
-        return ResponseEntity.ok(BasicResponse.createResponse("회원가입 성공", userValue));
+        return ResponseEntity.ok(BasicResponse.create("회원가입 성공", userValue));
     }
 
 

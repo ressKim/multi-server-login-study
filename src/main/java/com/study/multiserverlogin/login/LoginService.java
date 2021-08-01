@@ -38,7 +38,7 @@ public class LoginService {
         if (!userCheck) {
             return ResponseEntity
                     .badRequest()
-                    .body(BasicResponse.createResponse(
+                    .body(BasicResponse.create(
                             "아이디 또는 비밀번호를 확인해 주세요.",
                             userValue
                     ));
@@ -51,7 +51,7 @@ public class LoginService {
 
         return ResponseEntity
                 .ok()
-                .body(BasicResponse.createResponse(
+                .body(BasicResponse.create(
                         "로그인 성공",
                         null
                 ));
@@ -61,7 +61,7 @@ public class LoginService {
         String sessionValue = (String) session.getAttribute(String.valueOf(LOGIN_SESSION));
         if (sessionValue == null) {
             return
-                    BasicResponse.createResponse(
+                    BasicResponse.create(
                             "로그인 되지 않은 사용자 입니다.",
                             null
                     );
@@ -73,7 +73,7 @@ public class LoginService {
         if (duration.getSeconds() > 60 * 5) {
             loginSessionRepository.deleteById(loginSession.getId());
             return
-                    BasicResponse.createResponse(
+                    BasicResponse.create(
                             "세션이 만료되었습니다 다시 로그인해주세요",
                             null
                     );
@@ -84,7 +84,7 @@ public class LoginService {
         loginSession.updateSessionTime();
 
         return
-                BasicResponse.createResponse(
+                BasicResponse.create(
                         "로그인중인 사용자",
                         loginUserId
                 );

@@ -21,7 +21,8 @@ public class UserController {
     private final LoginService loginService;
 
     /**
-     * @param userValue user 회원가입 - 지금은 중복된 userId 상관없이 가입
+     * user 회원가입
+     * 성공시 status 200 맞지 않을시 status 400
      */
     @PostMapping("/join")
     public ResponseEntity<BasicResponse> saveUser(@RequestBody UserValue userValue) {
@@ -30,7 +31,7 @@ public class UserController {
             return ResponseEntity
                     .badRequest()
                     .body(
-                            BasicResponse.createResponse("아이디 또는 비밀번호를 확인해 주세요", userValue)
+                            BasicResponse.create("아이디 또는 비밀번호를 확인해 주세요", userValue)
                     );
         }
 
