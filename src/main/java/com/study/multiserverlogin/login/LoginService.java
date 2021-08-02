@@ -26,6 +26,9 @@ public class LoginService {
     private final LoginSessionRepository loginSessionRepository;
     private final UserEntityRepository userEntityRepository;
 
+    //세션 시간 설정
+    private static final int LOGIN_SESSION_TIME = 5 * 60;
+
 
     /**
      * - login
@@ -44,10 +47,7 @@ public class LoginService {
                     ));
         }
 
-        String sessionKey = createSession(userValue.getUserId());
-        session.setAttribute(String.valueOf(LOGIN_SESSION), sessionKey);
-        //현재 login session 만 따로 5분으로 설정
-        session.setMaxInactiveInterval(5 * 60);
+        createLoginSession(userValue, session);
 
         return ResponseEntity
                 .ok()
@@ -56,6 +56,7 @@ public class LoginService {
                         null
                 ));
     }
+
 
     public BasicResponse loginCheck(HttpSession session) {
         String sessionValue = (String) session.getAttribute(String.valueOf(LOGIN_SESSION));
@@ -68,9 +69,9 @@ public class LoginService {
         }
 
         LoginSession loginSession = loginSessionRepository.findBySessionKey(sessionValue);
-        Duration duration = Duration.between(loginSession.getSessionTime(), LocalDateTime.now());
-        //5분이상 차이나면 세션 만료 보내기
-        if (duration.getSeconds() > 60 * 5) {
+        long sessionInterval = Duration.between(loginSession.getSessionTime(), LocalDateTime.now()).getSeconds();
+
+        if (sessionInterval > LOGIN_SESSION_TIME) {
             loginSessionRepository.deleteById(loginSession.getId());
             return
                     BasicResponse.create(
@@ -78,10 +79,10 @@ public class LoginService {
                             null
                     );
         }
-        Long loginUserId = loginSession.getUserId();
 
         //세션 시간 현재로 갱신
         loginSession.updateSessionTime();
+        Long loginUserId = loginSession.getUserId();
 
         return
                 BasicResponse.create(
@@ -90,6 +91,15 @@ public class LoginService {
                 );
     }
 
+    private void createLoginSession(UserValue userValue, HttpSession session) {
+        String sessionKey = createSession(userValue.getUserId());
+        session.setAttribute(String.valueOf(LOGIN_SESSION), sessionKey);
+        session.setMaxInactiveInterval(LOGIN_SESSION_TIME);
+    }
+
+    /**
+     * session 생성 후 session DB에도 저장
+     */
     private String createSession(String userId) {
         UserEntity userEntity = userEntityRepository.findByUserId(userId);
         String sessionKey = UUID.randomUUID().toString();
