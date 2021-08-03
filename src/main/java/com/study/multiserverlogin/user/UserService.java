@@ -18,13 +18,12 @@ public class UserService {
     private final LoginSessionRepository loginSessionRepository;
 
     public Boolean userSave(UserValue userValue) {
-        //아이디 중복이면 badRequest return
+        //아이디 중복이면 false return
         if (userEntityRepository.existsByUserId(userValue.getUserId())) {
             return false;
-
         }
         userEntityRepository.save(UserEntity.create(userValue));
-        //성공시 성공 return
+        //성공시 true return
         return true;
     }
 
