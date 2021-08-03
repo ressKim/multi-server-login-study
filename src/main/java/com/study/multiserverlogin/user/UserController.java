@@ -1,6 +1,7 @@
 package com.study.multiserverlogin.user;
 
 import com.study.multiserverlogin.login.LoginService;
+import com.study.multiserverlogin.response.BaseResponse;
 import com.study.multiserverlogin.response.LoginResponse;
 import com.study.multiserverlogin.response.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class UserController {
      * 성공시 true 실패시 boolean
      */
     @PostMapping("/join")
-    public ResponseEntity<UserResponse> saveUser(@RequestBody UserValue userValue) {
+    public ResponseEntity<? extends BaseResponse> saveUser(@RequestBody UserValue userValue) {
 
         if (UserValue.validCheck(userValue)) {
             return ResponseEntity
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody UserValue userValue, HttpSession session) {
+    public ResponseEntity<? extends BaseResponse> login(@RequestBody UserValue userValue, HttpSession session) {
 
         if (!loginService.login(userValue, session)) {
             return ResponseEntity
