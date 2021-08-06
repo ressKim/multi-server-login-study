@@ -1,8 +1,11 @@
 package com.study.multiserverlogin.error.exHandler;
 
 import com.study.multiserverlogin.error.exception.LoginException;
+import com.study.multiserverlogin.response.BaseResponse;
+import com.study.multiserverlogin.response.LoginResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,9 +29,10 @@ public class ExControllerAdvice {
 
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(LoginException.class)
-    public ErrorResult loginExHandler(LoginException e) {
-        log.error("[loginExHandler] ex", e);
-        return ErrorResult.of(ErrorStatus.LOGIN_EXCEPTION, e.getMessage());
+    public ResponseEntity<? extends BaseResponse> loginExHandler(LoginException e) {
+        log.error("[loginExHandler] ex =", e);
+//        return ErrorResult.of(ErrorStatus.LOGIN_EXCEPTION, e.getMessage());
+        return ResponseEntity.badRequest().body(LoginResponse.fail("로그인이 필요합니다.!!", e.getMessage()));
     }
 
 
