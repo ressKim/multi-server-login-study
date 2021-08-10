@@ -5,7 +5,8 @@
 |------|---|---|
 |POST|/user/join|회원가입|
 |POST|/user/login|로그인|
-|GET|/|로그인유무확인|
+|GET|/|home|
+|GET|/login-check|로그인유무확인|
 
 # 상세
 

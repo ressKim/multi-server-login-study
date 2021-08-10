@@ -1,5 +1,6 @@
 package com.study.multiserverlogin.domain.session;
 
+import com.study.multiserverlogin.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 //@Value()
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class LoginSession {
+public class LoginSession extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

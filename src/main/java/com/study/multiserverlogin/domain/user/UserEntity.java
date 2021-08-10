@@ -1,5 +1,6 @@
 package com.study.multiserverlogin.domain.user;
 
+import com.study.multiserverlogin.domain.BaseTimeEntity;
 import com.study.multiserverlogin.user.UserValue;
 import lombok.*;
 import lombok.experimental.NonFinal;
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 //@Value()
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserEntity {
+public class UserEntity extends BaseTimeEntity {
     /**
      * @id - user table pk
      * @userId - user의 로그인 아이디

@@ -2,10 +2,10 @@ package com.study.multiserverlogin.login;
 
 import com.study.multiserverlogin.domain.session.LoginSession;
 import com.study.multiserverlogin.domain.session.LoginSessionRepository;
-import com.study.multiserverlogin.domain.session.SessionName;
 import com.study.multiserverlogin.domain.user.UserEntity;
 import com.study.multiserverlogin.domain.user.UserEntityRepository;
-import com.study.multiserverlogin.response.BasicResponse;
+import com.study.multiserverlogin.response.LoginResponse;
+import com.study.multiserverlogin.response.UserResponse;
 import com.study.multiserverlogin.user.UserValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,35 +34,25 @@ public class LoginService {
      * - login
      * - 성공 시 response header 에 loginSession : sessionKey 를 넣어서 응답.
      */
-    public ResponseEntity<BasicResponse> login(UserValue userValue, HttpSession session) {
+    public Boolean login(UserValue userValue, HttpSession session) {
 
         Boolean userCheck = userEntityRepository.existsByUserIdAndPassword(userValue.getUserId(), userValue.getPassword());
 
         if (!userCheck) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(BasicResponse.create(
-                            "아이디 또는 비밀번호를 확인해 주세요.",
-                            userValue
-                    ));
+            return false;
         }
 
         createLoginSession(userValue, session);
 
-        return ResponseEntity
-                .ok()
-                .body(BasicResponse.create(
-                        "로그인 성공",
-                        null
-                ));
+        return true;
     }
 
 
-    public BasicResponse loginCheck(HttpSession session) {
+    public LoginResponse loginCheck(HttpSession session) {
         String sessionValue = (String) session.getAttribute(String.valueOf(LOGIN_SESSION));
         if (sessionValue == null) {
             return
-                    BasicResponse.create(
+                    LoginResponse.fail(
                             "로그인 되지 않은 사용자 입니다.",
                             null
                     );
@@ -74,7 +64,7 @@ public class LoginService {
         if (sessionInterval > LOGIN_SESSION_TIME) {
             loginSessionRepository.deleteById(loginSession.getId());
             return
-                    BasicResponse.create(
+                    LoginResponse.fail(
                             "세션이 만료되었습니다 다시 로그인해주세요",
                             null
                     );
@@ -85,7 +75,7 @@ public class LoginService {
         Long loginUserId = loginSession.getUserId();
 
         return
-                BasicResponse.create(
+                LoginResponse.success(
                         "로그인중인 사용자",
                         loginUserId
                 );

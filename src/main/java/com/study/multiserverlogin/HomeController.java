@@ -1,6 +1,7 @@
 package com.study.multiserverlogin;
 
-import com.study.multiserverlogin.response.BasicResponse;
+import com.study.multiserverlogin.response.BaseResponse;
+import com.study.multiserverlogin.response.LoginResponse;
 import com.study.multiserverlogin.login.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,19 @@ import javax.servlet.http.HttpSession;
 public class HomeController {
 
     private final LoginService loginService;
+
     /*
-*
      * 현재 프로젝트에서 로그인/비로그인 구분 하는 곳
      */
     @GetMapping("/")
-    public ResponseEntity<? extends BasicResponse> homeTest(HttpSession session) {
-        return ResponseEntity
-                .ok(loginService.loginCheck(session));
+    public ResponseEntity<? extends BaseResponse> homeTest(HttpSession session) {
+
+        return ResponseEntity.ok(loginService.loginCheck(session));
+    }
+
+    @GetMapping("/login-check")
+    public ResponseEntity<? extends BaseResponse> loginCheck(HttpSession session) {
+        return ResponseEntity.ok(loginService.loginCheck(session));
     }
 
 }
