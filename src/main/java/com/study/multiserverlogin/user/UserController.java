@@ -1,8 +1,7 @@
 package com.study.multiserverlogin.user;
 
-import com.study.multiserverlogin.login.LoginService;
+import com.study.multiserverlogin.login.LoginServiceImpl;
 import com.study.multiserverlogin.response.BaseResponse;
-import com.study.multiserverlogin.response.LoginResponse;
 import com.study.multiserverlogin.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     private final UserService userService;
-    private final LoginService loginService;
+    private final LoginServiceImpl loginService;
 
     /**
      * user 회원가입
