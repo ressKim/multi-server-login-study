@@ -1,21 +1,19 @@
 package com.study.multiserverlogin.response.login;
 
+import com.study.multiserverlogin.error.message.LoginCheckExceptionMessage;
 import com.study.multiserverlogin.login.LoginStatus;
 import com.study.multiserverlogin.response.BaseResponse;
 import lombok.Value;
-import org.springframework.http.HttpStatus;
 
 @Value()
-public class LoginExceptionResponse<T> implements BaseResponse {
+public class LoginExceptionResponse implements BaseResponse {
 
     LoginStatus status;
+    int httpCode;
+    String errorMessage;
 
-    String message;
-
-    T result;
-
-    public static <T> LoginExceptionResponse<T> loginError(String message, T result) {
-        return new LoginExceptionResponse<>(LoginStatus.FAIL, message, result);
+    public static LoginExceptionResponse loginCheckError(LoginCheckExceptionMessage e) {
+        return new LoginExceptionResponse(e.getLoginStatus(), e.getHttpStatus(), e.getErrorMessage());
     }
 
 }
