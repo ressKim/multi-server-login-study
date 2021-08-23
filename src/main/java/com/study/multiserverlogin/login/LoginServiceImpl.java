@@ -6,7 +6,6 @@ import com.study.multiserverlogin.domain.session.SessionConst;
 import com.study.multiserverlogin.domain.user.UserEntity;
 import com.study.multiserverlogin.domain.user.UserEntityRepository;
 import com.study.multiserverlogin.error.exception.LoginCheckException;
-import com.study.multiserverlogin.error.exception.LoginException;
 import com.study.multiserverlogin.error.message.LoginCheckExceptionMessage;
 import com.study.multiserverlogin.user.UserValue;
 import javax.servlet.http.Cookie;
@@ -15,12 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import static com.study.multiserverlogin.domain.session.SessionName.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,32 +48,64 @@ public class LoginServiceImpl implements LoginService {
         return true;
     }
 
+    /**
+     * login cookie 에서 문제가 있다면 exception 으로 던지고
+     * 문제가 없다면 세션 시간을 갱신하고 넘어갑니다.
+     */
     @Override
-    public boolean isLoginCheck(HttpSession session) {
-        String sessionValue = (String) session.getAttribute(String.valueOf(LOGIN_SESSION));
-        if (sessionValue == null) {
-            // 로그인 되지 않은 사용자
-            return false;
-        }
+    public void isLoginCheck(HttpServletRequest request) {
 
+        Cookie getLoginCookie = getCookie(request);
+
+        String sessionValue = getLoginCookie.getValue();
+
+        LoginSession loginSession = sessionTimeCheck(sessionValue);
+        //세션 시간 현재로 갱신
+        loginSession.updateSessionTime();
+        loginSessionRepository.save(loginSession);
+
+        //로그인 중
+    }
+
+
+    /**
+     * cookie 에서 로그인 관련 쿠키 들고오기
+     */
+
+    private Cookie getCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        Cookie getLoginCookie = null;
+        for (Cookie cookie : cookies) {
+            if(cookie.getName().equals(SessionConst.LOGIN_USER)) {
+                getLoginCookie = cookie;
+            }
+        }
+        // login 관련 cookie 가 아예 없으면 NEED_LOGIN return
+        if (getLoginCookie == null) {
+            throw LoginCheckException.create(LoginCheckExceptionMessage.NEED_LOGIN);
+        }
+        return getLoginCookie;
+    }
+
+    /**
+     * cookie 의 시간 DB 에서 체크
+     */
+    private LoginSession sessionTimeCheck(String sessionValue) {
         LoginSession loginSession = loginSessionRepository.findBySessionKey(sessionValue);
         long sessionInterval = Duration.between(loginSession.getSessionTime(), LocalDateTime.now()).getSeconds();
 
         if (sessionInterval > LOGIN_SESSION_TIME) {
             loginSessionRepository.deleteById(loginSession.getId());
             //세션 만료
-            return false;
+            throw LoginCheckException.create(LoginCheckExceptionMessage.SESSION_EXPIRATION);
         }
-        //세션 시간 현재로 갱신
-        loginSession.updateSessionTime();
-        Long loginUserId = loginSession.getUserId();
-
-        //로그인 중
-        return true;
+        return loginSession;
     }
 
 
-  /**
+
+
+    /**
    * LOGIN_USER cookie 에 key 값을 넣고
    * HttpServletResponse 에 보낸다.
    */
