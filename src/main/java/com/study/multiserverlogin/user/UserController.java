@@ -1,5 +1,6 @@
 package com.study.multiserverlogin.user;
 
+import com.study.multiserverlogin.login.LoginService;
 import com.study.multiserverlogin.login.LoginServiceImpl;
 import com.study.multiserverlogin.response.BaseResponse;
 import com.study.multiserverlogin.response.UserResponse;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     private final UserService userService;
-    private final LoginServiceImpl loginService;
+    private final LoginService loginService;
 
     /**
      * user 회원가입

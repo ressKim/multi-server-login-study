@@ -19,7 +19,6 @@ import static com.study.multiserverlogin.domain.session.SessionName.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class LoginServiceImpl implements LoginService {
     private final LoginSessionRepository loginSessionRepository;
     private final UserEntityRepository userEntityRepository;
@@ -47,40 +46,6 @@ public class LoginServiceImpl implements LoginService {
 
         return true;
     }
-
-
-//    @Override
-//    public LoginResponse loginCheck(HttpSession session) {
-//        String sessionValue = (String) session.getAttribute(String.valueOf(LOGIN_SESSION));
-//        if (sessionValue == null) {
-//            return
-//                    LoginResponse.fail(
-//                            "로그인 되지 않은 사용자 입니다.",
-//                            null
-//                    );
-//        }
-//
-//        LoginSession loginSession = loginSessionRepository.findBySessionKey(sessionValue);
-//        long sessionInterval = Duration.between(loginSession.getSessionTime(), LocalDateTime.now()).getSeconds();
-//
-//        if (sessionInterval > LOGIN_SESSION_TIME) {
-//            loginSessionRepository.deleteById(loginSession.getId());
-//            return
-//                    LoginResponse.fail(
-//                            "세션이 만료되었습니다 다시 로그인해주세요",
-//                            null
-//                    );
-//        }
-//        //세션 시간 현재로 갱신
-//        loginSession.updateSessionTime();
-//        Long loginUserId = loginSession.getUserId();
-//
-//        return
-//                LoginResponse.success(
-//                        "로그인중인 사용자",
-//                        loginUserId
-//                );
-//    }
 
     @Override
     public boolean isLoginCheck(HttpSession session) {
