@@ -2,13 +2,18 @@ package com.study.multiserverlogin.login;
 
 import com.study.multiserverlogin.domain.session.LoginSession;
 import com.study.multiserverlogin.domain.session.LoginSessionRepository;
+import com.study.multiserverlogin.domain.session.SessionConst;
 import com.study.multiserverlogin.domain.user.UserEntity;
 import com.study.multiserverlogin.domain.user.UserEntityRepository;
-import com.study.multiserverlogin.response.login.LoginResponse;
+import com.study.multiserverlogin.error.exception.LoginCheckException;
+import com.study.multiserverlogin.error.exception.LoginException;
+import com.study.multiserverlogin.error.message.LoginCheckExceptionMessage;
 import com.study.multiserverlogin.user.UserValue;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.time.Duration;
@@ -34,15 +39,15 @@ public class LoginServiceImpl implements LoginService {
      * @return
      */
     @Override
-    public boolean login(UserValue userValue, HttpSession session) {
+    public boolean login(UserValue userValue, HttpServletResponse response) {
 
         Boolean userCheck = userEntityRepository.existsByUserIdAndPassword(userValue.getUserId(), userValue.getPassword());
 
         if (!userCheck) {
-            return false;
+          throw LoginCheckException.create(LoginCheckExceptionMessage.NOT_FOUND_USER);
         }
 
-        createLoginSession(userValue, session);
+        createLoginCookie(userValue, response);
 
         return true;
     }
@@ -72,14 +77,17 @@ public class LoginServiceImpl implements LoginService {
     }
 
 
-    private void createLoginSession(UserValue userValue, HttpSession session) {
+  /**
+   * LOGIN_USER cookie 에 key 값을 넣고
+   * HttpServletResponse 에 보낸다.
+   */
+    private void createLoginCookie(UserValue userValue, HttpServletResponse response) {
         String sessionKey = createSession(userValue.getUserId());
-        session.setAttribute(String.valueOf(LOGIN_SESSION), sessionKey);
-        session.setMaxInactiveInterval(LOGIN_SESSION_TIME);
+        response.addCookie(new Cookie(SessionConst.LOGIN_USER, sessionKey));
     }
 
     /**
-     * session 생성 후 session DB에도 저장
+     * session 생성 후 session DB 에 저장
      */
     private String createSession(String userId) {
         UserEntity userEntity = userEntityRepository.findByUserId(userId);
