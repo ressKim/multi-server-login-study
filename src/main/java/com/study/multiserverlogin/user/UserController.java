@@ -1,9 +1,13 @@
 package com.study.multiserverlogin.user;
 
+import com.study.multiserverlogin.error.exception.LoginCheckException;
+import com.study.multiserverlogin.error.message.LoginCheckExceptionMessage;
 import com.study.multiserverlogin.login.LoginService;
+import com.study.multiserverlogin.login.LoginServiceImpl;
 import com.study.multiserverlogin.response.BaseResponse;
-import com.study.multiserverlogin.response.LoginResponse;
 import com.study.multiserverlogin.response.UserResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +46,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<? extends BaseResponse> login(@RequestBody UserValue userValue, HttpSession session) {
+    public ResponseEntity<? extends BaseResponse> login(@RequestBody UserValue userValue, HttpServletResponse response) {
 
         UserResponse<UserValue> resultResponse;
 
-        if (!loginService.login(userValue, session)) {
-            resultResponse = UserResponse.fail(
-                    "아이디 또는 비밀번호를 확인해 주세요.", userValue);
+        if (!loginService.login(userValue, response)) {
+           throw LoginCheckException.create(LoginCheckExceptionMessage.NEED_LOGIN);
         } else {
             resultResponse = UserResponse.success(
                     "로그인 성공", null);
